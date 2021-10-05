@@ -1,7 +1,11 @@
 <template>
   <div>
     <h1>Yield Farm Breakeven Calculator</h1>
-    <div class="row">
+    <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="yieldFarmType" @change="toggleYieldFarmType" v-model="yieldFarm">
+    <label class="form-check-label" for="flexSwitchCheckDefault">{{ farmType }}</label>
+  </div>
+      <div class="row">
       <div class="col">
         <label for="apr">Starting APR</label>
         <div class="input-group">
@@ -179,6 +183,8 @@ export default defineComponent({
   name: "SimpleCalculator",
   data() {
     return { 
+      yieldFarm: true,
+      farmType: "LP Yield Farm",
       apr: 0,
       decay: 0,
       tokenA: "DGOLD",
@@ -197,6 +203,9 @@ export default defineComponent({
     }
   },
   methods: {
+    toggleYieldFarmType(){
+      this.farmType = this.yieldFarm ? "LP Yield Farm" : "Single Stake Farm"
+    },
     validate() {
       let valid = true
       return valid
@@ -244,6 +253,6 @@ export default defineComponent({
         // console.log(response.data)
       })
     },
-  }
+  },
 })
 </script>
