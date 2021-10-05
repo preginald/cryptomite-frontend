@@ -244,23 +244,6 @@ export default defineComponent({
         // console.log(response.data)
       })
     },
-    calculate() {
-      if(this.validate()) {
-        let data = {
-          apr: this.apr,
-          decay: this.decay,
-          service: this.service,
-        }
-        CalculatorDataService.calculate(data)
-        .then((response: ResponseData) => {
-          this.sum = response.data.sum
-          this.status = response.data.status
-          // console.log(response.data)
-        })
-      } else {
-        this.status = "error"
-      }
-    }
   }
 })
 </script>
