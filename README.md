@@ -2,7 +2,7 @@
 
 This repo tracks the frontend development.
 
-Go to https://github.com/preginald/cryptomite for the backend API project
+Go to https://github.com/preginald/cryptomite for the backend API project.
 
 # Vue 3 + Typescript + Vite
 
