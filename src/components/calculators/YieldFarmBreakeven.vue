@@ -46,9 +46,10 @@
       </div>
     </div>
     <div class="row mt-3">
+      <h3>Rewards</h3>
       <div class="col">
         <div class="input-group">
-          <span class="input-group-text">$</span>
+          <span class="input-group-text">#</span>
           <input
                   type="text"
                   placeholder="Yield"
@@ -59,12 +60,37 @@
       </div>
       <div class="col">
         <div class="input-group">
-          <span class="input-group-text">$</span>
+          <span class="input-group-text">#</span>
           <input
                   type="text"
                   placeholder="Yield"
                   class="form-control"
                   v-model="dailyYield"
+                  @change="dailyRewardChange()"
+          />
+        </div>
+      </div>
+      <div class="col">
+        <div class="input-group">
+          <span class="input-group-text">#</span>
+          <input
+                  type="text"
+                  placeholder="Yield"
+                  class="form-control"
+                  v-model="hourlyYield"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+                  type="text"
+                  placeholder="Yield"
+                  class="form-control"
+                  v-model="totalYieldValue"
           />
         </div>
       </div>
@@ -75,7 +101,19 @@
                   type="text"
                   placeholder="Yield"
                   class="form-control"
-                  v-model="hourlyYield"
+                  v-model="dailyYieldValue"
+                  @change="dailyRewardChange()"
+          />
+        </div>
+      </div>
+      <div class="col">
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+                  type="text"
+                  placeholder="Yield"
+                  class="form-control"
+                  v-model="hourlyYieldValue"
           />
         </div>
       </div>
@@ -198,6 +236,9 @@ export default defineComponent({
       totalYield: 0,
       dailyYield: 0,
       hourlyYield: 0,
+      totalYieldValue: 0,
+      dailyYieldValue: 0,
+      hourlyYieldValue: 0,
       status: "",
       service: "yield-farm-breakeven"
     }
@@ -205,6 +246,7 @@ export default defineComponent({
   methods: {
     toggleYieldFarmType(){
       this.farmType = this.yieldFarm ? "LP Yield Farm" : "Single Stake Farm"
+      this.calculateLP()
     },
     validate() {
       let valid = true
@@ -218,14 +260,39 @@ export default defineComponent({
       this.calculateLP()
     },
     principleOnChange(){
+      this.calculateYield()
       this.calculateLP()
     },
     aprOnChange(){
       this.calculateYield()
+      this.calculateLP()
+    },
+    dailyRewardChange(){
+      this.calculatePrinciple()
+    },
+    calculatePrinciple(){
+      let data = {
+        apr: this.apr,
+        dailyYieldValue: this.dailyYieldValue,
+        tokenAPrice: this.tokenAPrice,
+        service: 'calculatePrinciple',
+      }
+      CalculatorDataService.calculate(data)
+      .then((response: ResponseData) => {
+        this.totalYieldValue = response.data.totalYieldValue
+        this.dailyYieldValue = response.data.dailyYieldValue
+        this.hourlyYieldValue = response.data.hourlyYieldValue
+        this.totalYield= response.data.totalYield
+        this.dailyYield= response.data.dailyYield
+        this.hourlyYield= response.data.hourlyYield
+        this.principle = response.data.principle
+        this.status = response.data.status
+      })
     },
     calculateYield(){
       let data = {
         apr: this.apr,
+        tokenAPrice: this.tokenAPrice,
         principle: this.principle,
         service: 'calculateYield',
       }
@@ -234,6 +301,9 @@ export default defineComponent({
         this.totalYield = response.data.totalYield
         this.dailyYield = response.data.dailyYield
         this.hourlyYield = response.data.hourlyYield
+        this.totalYieldValue = response.data.totalYieldValue
+        this.dailyYieldValue = response.data.dailyYieldValue
+        this.hourlyYieldValue = response.data.hourlyYieldValue
         this.status = response.data.status
       })
     },
@@ -242,6 +312,7 @@ export default defineComponent({
         tokenAPrice: this.tokenAPrice,
         tokenBPrice: this.tokenBPrice,
         principle: this.principle,
+        yieldFarm: this.yieldFarm,
         service: 'calculateLP',
       }
 
