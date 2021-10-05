@@ -91,7 +91,7 @@
                 id="tokenA"
         />
       </div>
-      <div class="col">
+      <div class="col" v-if="yieldFarm">
         <label for="tokenB">Token B</label>
         <input
                 type="text"
@@ -128,6 +128,18 @@
         </div>
       </div>
       <div class="col">
+        <label for="tokenAQty">{{ tokenA }} Qty</label>
+        <input
+                type="text"
+                placeholder="Token A Qty"
+                class="form-control"
+                v-model="tokenAQty"
+                id="tokenAQty"
+        />
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col" v-if="yieldFarm">
         <label for="tokenBPrice">{{ tokenB }} Price</label>
         <div class="input-group">
           <span class="input-group-text">$</span>
@@ -141,19 +153,7 @@
           />
         </div>
       </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col">
-        <label for="tokenAQty">{{ tokenA }} Qty</label>
-        <input
-                type="text"
-                placeholder="Token A Qty"
-                class="form-control"
-                v-model="tokenAQty"
-                id="tokenAQty"
-        />
-      </div>
-      <div class="col">
+      <div class="col" v-if="yieldFarm">
         <label for="tokenBQty">{{ tokenB }} Qty</label>
         <input
                 type="text"
