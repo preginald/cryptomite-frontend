@@ -204,8 +204,12 @@
     </div>
     <div class="row mt-3">
       <div class="col">
-        <button class="btn btn-primary" @click="calculate">Calculate</button>
-        <button class="btn btn-warning mx-3" @click="reset">Reset</button>
+        Breakeven in {{ Math.round(breakevenHours) }} hours or {{ Math.round(breakevenDays) }} days.
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <button class="btn btn-warning" @click="reset">Reset</button>
       </div>
     </div>
   </div>
@@ -239,8 +243,10 @@ export default defineComponent({
       totalYieldValue: 0,
       dailyYieldValue: 0,
       hourlyYieldValue: 0,
+      breakevenHours: 0,
+      breakevenDays: 0,
       status: "",
-      service: "yield-farm-breakeven"
+      service: "yield-farm-breakeven",
     }
   },
   methods: {
@@ -324,6 +330,8 @@ export default defineComponent({
           this.totalYieldValue = response.data.totalYieldValue
           this.dailyYieldValue = response.data.dailyYieldValue
           this.hourlyYieldValue = response.data.hourlyYieldValue
+          this.breakevenHours = response.data.breakevenHours
+          this.breakevenDays = response.data.breakevenDays
           this.status = response.data.status
         })
       }
