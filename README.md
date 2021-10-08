@@ -21,3 +21,4 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 1. mkdir frontend
 2. git clone https://github.com/preginald/cryptomite-frontend.git .
 3. npm install
+4. npm run dev
