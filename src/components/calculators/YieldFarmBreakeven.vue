@@ -229,9 +229,9 @@ export default defineComponent({
       farmType: "LP Yield Farm",
       apr: 0,
       decay: 0,
-      tokenA: "DGOLD",
-      tokenB: "USDC",
-      tokenR: "DGOLD",
+      tokenA: "TOKENA",
+      tokenB: "TOKENB",
+      tokenR: "TOKENR",
       tokenAPrice: 0,
       tokenBPrice: 1.00,
       tokenAQty: 0,
@@ -258,7 +258,6 @@ export default defineComponent({
       let valid: any[] = []
       validArr.forEach((element: any) => {
         element = Number(element)
-        console.log(element)
 
         if(element <= 0){
           valid.push(false)
