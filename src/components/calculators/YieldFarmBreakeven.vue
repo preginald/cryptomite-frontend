@@ -26,7 +26,7 @@
                 id="tokenB"
         />
       </div>
-      <div class="col">
+      <div class="col" v-if="tokenA">
         <label for="tokenR">Reward Token</label>
         <input
                 type="text"
@@ -37,49 +37,10 @@
         />
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-3" v-if="tokenA">
+      <h3>Initial Price</h3>
       <div class="col">
-        <label for="apr">Starting APR</label>
-        <div class="input-group">
-        <input
-                type="text"
-                placeholder="Starting APR"
-                class="form-control"
-                v-model="apr"
-                id="apr"
-                @change="aprOnChange()"
-        />
-        <span class="input-group-text">%</span>
-        </div>
-      </div>
-      <div class="col">
-        <label for="decay">APR Decay</label>
-        <input
-                type="text"
-                placeholder="APR Decay"
-                class="form-control"
-                v-model="decay"
-                id="decay"
-        />
-      </div>
-      <div class="col">
-        <label for="principle">Principle</label>
-        <div class="input-group">
-        <span class="input-group-text">$</span>
-        <input
-                type="text"
-                placeholder="Principle"
-                class="form-control"
-                v-model="principle"
-                id="principle"
-                @change="principleOnChange()"
-        />
-        </div>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col">
-        <label for="tokenAPrice">{{ tokenA }} Price</label>
+        <label for="tokenAPrice">{{ tokenA }}</label>
         <div class="input-group">
           <span class="input-group-text">$</span>
           <input
@@ -89,6 +50,77 @@
                   v-model="tokenAPrice"
                   id="tokenAPrice"
                   @change="priceOnChange()"
+          />
+        </div>
+      </div>
+      <div class="col" v-if="yieldFarm">
+        <label for="tokenBPrice">{{ tokenB }}</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+                  type="text"
+                  placeholder="Token B Price"
+                  class="form-control"
+                  v-model="tokenBPrice"
+                  id="tokenBPrice"
+                  @change="priceOnChange()"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3" v-if="tokenR">
+      <div class="col">
+        <label for="apr">Starting APR</label>
+        <div class="input-group">
+          <input
+                type="text"
+                placeholder="Starting APR"
+                class="form-control"
+                v-model="apr"
+                id="apr"
+                @change="aprOnChange()"
+          />
+          <span class="input-group-text">%</span>
+        </div>
+      </div>
+      <div class="col">
+        <label for="depositFee">Deposit Fee</label>
+        <div class="input-group">
+          <input
+                type="text"
+                placeholder="Deposit Fee"
+                class="form-control"
+                v-model="depositFee"
+                id="depositFee"
+                @change="feeOnChange()"
+          />
+          <span class="input-group-text">%</span>
+        </div>
+      </div>
+      <div class="col" v-if="show">
+        <label for="decay">APR Decay</label>
+        <input
+                type="text"
+                placeholder="APR Decay"
+                class="form-control"
+                v-model="decay"
+                id="decay"
+        />
+      </div>
+    </div>
+    <div class="row mt-3" v-if="tokenA">
+      <h3>Principle</h3>
+      <div class="col">
+        <label for="principle">Value</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+                  type="text"
+                  placeholder="Principle"
+                  class="form-control"
+                  v-model="principle"
+                  id="principle"
+                  @keyup="principleOnChange()"
           />
         </div>
       </div>
@@ -102,22 +134,6 @@
                 id="tokenAQty"
         />
       </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col" v-if="yieldFarm">
-        <label for="tokenBPrice">{{ tokenB }} Price</label>
-        <div class="input-group">
-          <span class="input-group-text">$</span>
-          <input
-                  type="text"
-                  placeholder="Token B Price"
-                  class="form-control"
-                  v-model="tokenBPrice"
-                  id="tokenBPrice"
-                  @change="priceOnChange()"
-          />
-        </div>
-      </div>
       <div class="col" v-if="yieldFarm">
         <label for="tokenBQty">{{ tokenB }} Qty</label>
         <input
@@ -129,7 +145,35 @@
         />
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-3" v-if="depositFee && principle">
+      <h3>Fees</h3>
+      <div class="col">
+        <label for="depositFeeValue">Fee Value</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+                  type="text"
+                  placeholder="Deposit Fee Value"
+                  class="form-control"
+                  readonly="true"
+                  v-model="depositFeeValue"
+                  id="depositFeeValue"
+          />
+        </div>
+      </div>
+      <div class="col">
+        <label for="depositFeeQty">{{ tokenA }} Fee Qty</label>
+        <input
+                type="text"
+                placeholder="Deposit Fee Qty"
+                class="form-control"
+                readonly="true"
+                v-model="depositFeeQty"
+                id="depositFeeQty"
+        />
+      </div>
+    </div>
+    <div class="row mt-3" v-if="totalYield">
       <h3>Rewards</h3>
       <div class="col">
         <div class="input-group">
@@ -166,7 +210,7 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-3" v-if="totalYield">
       <div class="col">
         <div class="input-group">
           <span class="input-group-text">$</span>
@@ -204,7 +248,8 @@
     </div>
     <div class="row mt-3">
       <div class="col">
-        Breakeven in {{ Math.round(breakevenHours) }} hours or {{ Math.round(breakevenDays) }} days.
+        <p>Fee Breakeven in {{ Math.round(feeBreakevenHours) }} hours<span v-if="feeBreakevenDays > 1"> or {{ Math.round(feeBreakevenDays) }} days</span>.</p>
+        <p>Principle Breakeven in {{ Math.round(principleBreakevenHours) }} hours or {{ Math.round(principleBreakevenDays) }} days.</p>
       </div>
     </div>
     <div class="row mt-3">
@@ -225,26 +270,32 @@ export default defineComponent({
   name: "SimpleCalculator",
   data() {
     return { 
+      show: false,
       yieldFarm: false,
-      farmType: "LP Yield Farm",
+      farmType: "Single Stake Farm",
       apr: 0,
       decay: 0,
-      tokenA: "TOKENA",
-      tokenB: "TOKENB",
-      tokenR: "TOKENR",
+      depositFee: 0,
+      tokenA: "",
+      tokenB: "",
+      tokenR: "",
       tokenAPrice: 0,
-      tokenBPrice: 1.00,
+      tokenBPrice: 0,
       tokenAQty: 0,
       tokenBQty: 0,
       principle: 0,
+      depositFeeValue: 0,
+      depositFeeQty: 0,
       totalYield: 0,
       dailyYield: 0,
       hourlyYield: 0,
       totalYieldValue: 0,
       dailyYieldValue: 0,
       hourlyYieldValue: 0,
-      breakevenHours: 0,
-      breakevenDays: 0,
+      feeBreakevenHours: 0,
+      feeBreakevenDays: 0,
+      principleBreakevenHours: 0,
+      principleBreakevenDays: 0,
       status: "",
       service: "yield-farm-breakeven",
     }
@@ -263,28 +314,52 @@ export default defineComponent({
           valid.push(false)
         } 
       })
-      
       return valid.every(Boolean)
-
     },
     reset() {
       this.apr = 0
       this.decay = 0
+    },
+    feeOnChange(){
+      this.calculateFees()
     },
     priceOnChange(){
       this.calculateLP()
       this.calculateYield()
     },
     principleOnChange(){
-      this.calculateYield()
+      this.calculateFees()
       this.calculateLP()
+      this.calculateYield()
     },
     aprOnChange(){
-      this.calculateYield()
+      this.calculateFees()
       this.calculateLP()
+      this.calculateYield()
     },
     dailyRewardChange(){
       this.calculatePrinciple()
+    },
+    calculateFees(){
+      let validArr = [this.depositFee, this.principle]
+
+      if(this.validate(validArr)){
+      let data = {
+        depositFee: this.depositFee,
+        tokenAPrice: this.tokenAPrice,
+        principle: this.principle,
+        service: 'calculateDepositFee',
+      }
+      
+      CalculatorDataService.calculate(data)
+      .then((response: ResponseData) => {
+        this.depositFeeValue = response.data.depositFeeValue
+        this.depositFeeQty = response.data.depositFeeQty
+        this.tokenAPrice = response.data.tokenAPrice
+        this.principle = response.data.principle
+        this.status = response.data.status
+      })
+      }
     },
     calculatePrinciple(){
       let validArr = [this.apr, this.dailyYieldValue, this.tokenAPrice]
@@ -314,10 +389,17 @@ export default defineComponent({
       let validArr = [this.apr, this.tokenAPrice, this.principle]
 
       if(this.validate(validArr)){
+        let principle = 0
+        if(this.depositFee > 0){
+          principle = this.principle - this.depositFeeValue
+        } else {
+          principle = this.principle
+        }
         let data = {
           apr: this.apr,
           tokenAPrice: this.tokenAPrice,
-          principle: this.principle,
+          principle: principle,
+          depositFeeValue: this.depositFeeValue,
           service: 'calculateYield',
         }
 
@@ -329,8 +411,10 @@ export default defineComponent({
           this.totalYieldValue = response.data.totalYieldValue
           this.dailyYieldValue = response.data.dailyYieldValue
           this.hourlyYieldValue = response.data.hourlyYieldValue
-          this.breakevenHours = response.data.breakevenHours
-          this.breakevenDays = response.data.breakevenDays
+          this.feeBreakevenHours = response.data.feeBreakevenHours
+          this.feeBreakevenDays = response.data.feeBreakevenDays
+          this.principleBreakevenHours = response.data.principleBreakevenHours
+          this.principleBreakevenDays = response.data.principleBreakevenDays
           this.status = response.data.status
         })
       }
