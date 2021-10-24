@@ -34,6 +34,7 @@
                 class="form-control"
                 v-model="tokenR"
                 id="tokenR"
+                @change="rewardTokenOnChange()"
         />
       </div>
     </div>
@@ -44,12 +45,26 @@
         <div class="input-group">
           <span class="input-group-text">$</span>
           <input
-                  type="text"
-                  placeholder="Token A Price"
+                  type="number"
+                  :placeholder="tokenA + ' Price'"
                   class="form-control"
                   v-model="tokenAPrice"
                   id="tokenAPrice"
                   @change="priceOnChange()"
+          />
+        </div>
+      </div>
+      <div class="col" v-if="showRewardTokenPrice">
+        <label for="tokenAPrice">{{ tokenR }}</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+                  type="number"
+                  :placeholder="tokenR + ' Price'"
+                  number
+                  class="form-control"
+                  v-model="tokenRPrice"
+                  id="tokenRPrice"
           />
         </div>
       </div>
@@ -58,8 +73,8 @@
         <div class="input-group">
           <span class="input-group-text">$</span>
           <input
-                  type="text"
-                  placeholder="Token B Price"
+                  type="number"
+                  placeholder="{{ tokenB }} Price"
                   class="form-control"
                   v-model="tokenBPrice"
                   id="tokenBPrice"
@@ -128,7 +143,7 @@
         <label for="tokenAQty">{{ tokenA }} Qty</label>
         <input
                 type="text"
-                placeholder="Token A Qty"
+                placeholder="{{ tokenA }} Qty"
                 class="form-control"
                 v-model="tokenAQty"
                 id="tokenAQty"
@@ -138,7 +153,7 @@
         <label for="tokenBQty">{{ tokenB }} Qty</label>
         <input
                 type="text"
-                placeholder="Token B Qty"
+                placeholder="{{ tokenB }} Qty"
                 class="form-control"
                 v-model="tokenBQty"
                 id="tokenBQty"
@@ -170,6 +185,42 @@
                 readonly="true"
                 v-model="depositFeeQty"
                 id="depositFeeQty"
+        />
+      </div>
+    </div>
+    <div class="row mt-3" v-if="tokenA">
+      <h3>Initial Investment</h3>
+      <div class="col">
+        <label for="principle">Value</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input
+                  type="text"
+                  placeholder="Principle"
+                  class="form-control"
+                  v-model="principleAfterFee"
+                  id="principleAfterFee"
+          />
+        </div>
+      </div>
+      <div class="col">
+        <label for="tokenAQtyAfterFee">{{ tokenA }} Qty</label>
+        <input
+                type="text"
+                :placeholder="tokenA + ' Qty'"
+                class="form-control"
+                v-model="tokenAQtyAfterFee"
+                id="tokenAQtyAfterFee"
+        />
+      </div>
+      <div class="col" v-if="yieldFarm">
+        <label for="tokenBQtyAfterFee">{{ tokenB }} Qty</label>
+        <input
+                type="text"
+                :placeholder="tokenB + ' Qty'"
+                class="form-control"
+                v-model="tokenBQtyAfterFee"
+                id="tokenBQtyAfterFee"
         />
       </div>
     </div>
@@ -271,19 +322,24 @@ export default defineComponent({
   data() {
     return { 
       show: false,
+      showRewardTokenPrice: false,
       yieldFarm: false,
       farmType: "Single Stake Farm",
       apr: 0,
       decay: 0,
       depositFee: 0,
-      tokenA: "",
+      tokenA: "ELK",
       tokenB: "",
-      tokenR: "",
-      tokenAPrice: 0,
+      tokenR: "TACO",
+      tokenAPrice: 2.45693066183,
       tokenBPrice: 0,
+      tokenRPrice: 5.335,
       tokenAQty: 0,
       tokenBQty: 0,
       principle: 0,
+      principleAfterFee: 0,
+      tokenAQtyAfterFee: 0,
+      tokenBQtyAfterFee: 0,
       depositFeeValue: 0,
       depositFeeQty: 0,
       totalYield: 0,
@@ -320,6 +376,9 @@ export default defineComponent({
       this.apr = 0
       this.decay = 0
     },
+    rewardTokenOnChange(){
+      this.showRewardTokenPrice = this.tokenA == this.tokenR ? false : true
+    },
     feeOnChange(){
       this.calculateFees()
     },
@@ -347,6 +406,7 @@ export default defineComponent({
       let data = {
         depositFee: this.depositFee,
         tokenAPrice: this.tokenAPrice,
+        tokenAQty: this.tokenAQty,
         principle: this.principle,
         service: 'calculateDepositFee',
       }
@@ -357,6 +417,8 @@ export default defineComponent({
         this.depositFeeQty = response.data.depositFeeQty
         this.tokenAPrice = response.data.tokenAPrice
         this.principle = response.data.principle
+        this.principleAfterFee = response.data.principleAfterFee
+        this.tokenAQtyAfterFee = response.data.tokenAQtyAfterFee
         this.status = response.data.status
       })
       }
