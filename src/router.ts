@@ -31,9 +31,19 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("./components/calculators/YieldFarmBreakeven.vue"),
   },
   {
-    path: "/test",
-    name: "test",
-    component: () => import("./components/tests/Test.vue"),
+    path: "/testing/",
+    name: "testing-home",
+    component: () => import("./components/testing/TestingHome.vue"),
+  },
+  {
+    path: "/testing/get-token-by-contract",
+    name: "get-token-by-contract",
+    component: () => import("./components/testing/GetTokenByContract.vue"),
+  },
+  {
+    path: "/testing/get-matic-balance",
+    name: "get-matic-balance",
+    component: () => import("./components/testing/GetMaticBalance.vue"),
   },
 ];
 
