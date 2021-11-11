@@ -23,6 +23,9 @@
               <router-link to="/home" class="nav-link">Home</router-link>
             </li>
             <li class="nav-item">
+              <router-link to="/testing" class="nav-link">Testing</router-link>
+            </li>
+            <li class="nav-item">
               <router-link to="/calculators/simple" class="nav-link"
                 >Simple</router-link
               >
